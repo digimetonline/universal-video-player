@@ -33,6 +33,14 @@ jobs:
         run: |
           sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET"/>\n    <application|' android/app/src/main/AndroidManifest.xml
 
+      - name: Raise compileSdk to 36 and set minSdk 24
+        run: |
+          f=$(ls android/app/build.gradle.kts android/app/build.gradle 2>/dev/null | head -n1)
+          echo "Patching $f"
+          sed -i -E 's/^([[:space:]]*)compileSdk(Version)?[[:space:]]*(=)?[[:space:]]*.*$/\1compileSdk = 36/' "$f"
+          sed -i -E 's/^([[:space:]]*)minSdk(Version)?[[:space:]]*(=)?[[:space:]]*.*$/\1minSdk = 24/' "$f"
+          grep -n "compileSdk\|minSdk" "$f"
+
       - run: flutter pub get
       - run: flutter build apk --release
 
