@@ -409,7 +409,7 @@ class _ControlsOverlayState extends State<ControlsOverlay> {
               leading: const Icon(Icons.auto_mode),
               title: const Text('Auto'),
               onTap: () {
-                widget.player.setSubtitleTrack(SubtitleTrack.automatic());
+                widget.player.setSubtitleTrack(SubtitleTrack.auto());
                 Navigator.pop(context);
               },
             ),
@@ -421,13 +421,13 @@ class _ControlsOverlayState extends State<ControlsOverlay> {
                 Navigator.pop(context);
               },
             ),
-            for (final t in tracks.subtitle)
+            for (final t in tracks.subtitle.where((t) => t.id != 'auto' && t.id != 'no'))
               ListTile(
                 leading: const Icon(Icons.subtitles_outlined),
                 title: Text(t.title ?? t.id),
                 subtitle: t.language == null ? null : Text(t.language!),
                 onTap: () {
-                  widget.player.setSubtitleTrack(SubtitleTrack.id(t.id));
+                  widget.player.setSubtitleTrack(t);
                   Navigator.pop(context);
                 },
               ),
@@ -463,17 +463,17 @@ class _ControlsOverlayState extends State<ControlsOverlay> {
               padding: EdgeInsets.all(16),
               child: Text('Audio track'),
             ),
-            for (final t in tracks.audio)
+            for (final t in tracks.audio.where((t) => t.id != 'auto' && t.id != 'no'))
               ListTile(
                 leading: const Icon(Icons.audiotrack_outlined),
                 title: Text(t.title ?? t.id),
                 subtitle: t.language == null ? null : Text(t.language!),
                 onTap: () {
-                  widget.player.setAudioTrack(AudioTrack.id(t.id));
+                  widget.player.setAudioTrack(t);
                   Navigator.pop(context);
                 },
               ),
-            if (tracks.audio.isEmpty)
+            if (tracks.audio.where((t) => t.id != 'auto' && t.id != 'no').isEmpty)
               const ListTile(title: Text('No embedded audio tracks')),
           ],
         ),
